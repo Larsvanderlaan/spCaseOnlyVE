@@ -1,4 +1,4 @@
-# npOddsRatio
+# Semiparametric inference for subgroup-stratified strain-specific relative vaccine efficacy in observational cases-only studies
 Semiparametric and Nonparametric Targeted Maximum-Likelihood-based (TMLE) inference for the conditional odds ratio with post-and-pre-treatment informative outcome missingness using black-box machine-learning. 
 
 ## Key words: 
