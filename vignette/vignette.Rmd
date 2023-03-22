@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Generate data
 
 ```{r}
-# devtools::install_github("Larsvanderlaan/npOddsRatio)
+# devtools::install_github("Larsvanderlaan/spCaseOnlyVE)
 library(npOddsRatio)
 n <- 1000
 # Baseline variables
@@ -65,19 +65,7 @@ fit_sp <- spOR(logOR_formula,
             max_degree_Y0W = 2, # Generate only up to two-way interaction spline basis functions
             num_knots_Y0W = c(10,5,0), # Specify number of knots used per covariate for each spline basis function of each interaction degree (deg = 1,2,3).
             sl3_learner_A = lrnr_cv) # learner to estimate P(A=1|X,Delta=1)  
-
-
-# Or be totally nonparametric and get correct inference even when parametric model is incorrect and just an approximation
-fit_np <- npOR(logOR_formula, 
-            W = data[,c("X1", "X2")],
-            A = data$A, 
-            Y = data$Y ,
-            Delta = data$Delta, 
-            sl3_learner_OR = lrnr_hal, # Learner for true OR
-             sl3_learner_Y0W = lrnr_hal, # Learner for true P(Y=1|A=0,W) nuisance
-            sl3_learner_A = lrnr_cv, #Learner for P(A=1|W)
-            sl3_learner_Delta = lrnr_cv) #Learner for P(Delta=1|W,A)
-
+ 
 
 
 ```
