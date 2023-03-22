@@ -6,7 +6,7 @@ See our manuscript for the setup, theory, and method:
 https://arxiv.org/pdf/2303.11462.pdf
 
 
-# Method implemented
+ 
 
 ## Semiparametric inference for conditional odds ratio using partially linear regression
 The method `spOR` implements a targeted maximum likelihood estimator (TMLE) for the partially linear logistic regression model.
@@ -23,8 +23,6 @@ The target parameter is the conditional odds ratio:
 `OR(w): = {P(Y=1|A=1,W=w)/P(Y=0|A=1,W=w)} / {P(Y=1|A=0,W=w)/P(Y=0|A=0,W=w)}`,
 which we model on the log scale by a linear function in w.
 
-
-## The implemented functions
-
+ 
  
  
