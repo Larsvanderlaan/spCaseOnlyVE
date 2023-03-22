@@ -1,37 +1,30 @@
-# Semiparametric inference for subgroup-stratified strain-specific relative vaccine efficacy in observational cases-only studies
-Semiparametric and Nonparametric Targeted Maximum-Likelihood-based (TMLE) inference for the conditional odds ratio with post-and-pre-treatment informative outcome missingness using black-box machine-learning. 
+# Semiparametric inference for relative heterogeneous vaccine efficacy between strains in observational case-only studies
 
-## Key words: 
-Causal Inference, Missing Data, Partially linear logistic regression, semiparametric, nonparametric, TMLE, machine-learning, Targeted-learning, working-model, Highly Adaptive Lasso
+Semiparametric methods for inferring subgroup-specific relative vaccine efficacy in a partially vaccinated population against multiple strains of a virus. The implemented methods are designed for observational case-only studies with informative missingness in viral strain type due to vaccination status, pre-vaccination variables, and also post-vaccination factors such as viral load. Assuming that the relative strain-specific conditional vaccine efficacy has a known log-linear parametric form, we implement semiparametric asymptotically linear estimators of the parameters based on targeted (debiased) machine learning estimators for partially linear logistic regression models. 
+
+See our manuscript for the setup, theory, and method:
+https://arxiv.org/pdf/2303.11462.pdf
 
 
-## Method implemented
-Utilizing the framework of Targeted Maximum-Likelihood estimation (TMLE), efficient estimates and inference is given for the conditional odds ratio in both semiparametric (sp) and nonparametric (np) models with post-treatment informative missingness. Black-box machine-learning is leveraged to estimate nuisance parameters. In short, the methods implemented here can be viewed as (causal) semi/nonparametric generalizations of ordinary parametric logistic regression (e.g. glm). 
+# Method implemented
+
+## Semiparametric inference for conditional odds ratio using partially linear regression
+The method `spOR` implements a targeted maximum likelihood estimator (TMLE) for the partially linear logistic regression model.
+
+
+## Semiparametric inference for conditional odds ratio with outcome missingness informed by post-treatment variables
+The method `spORMissing` implements a targeted maximum likelihood estimator (TMLE) for the partially linear logistic regression model with outcome missingness that is informed by post-treatment variables.
+  
 
 ## Data structure and target parameter
-Consider the data-structure (W,A, Z, Delta, Y) where W is a vector of pre-treatment baseline covariates, A is a binary treatment assignment, and Y is a binary outcome. Delta is a binary variable that captures whether Y is missing (Delta =1 is not missing). Z is a post-treatment confounding variable that informs both Delta (i.e. the missingness of Y) and Y itself. 
+Consider the data-structure `(W, A, Z, Delta, Y)` where `W` is a vector of pre-treatment baseline covariates, `A` is a binary treatment assignment, and `Y` is a binary outcome. `Delta` is a binary indicator variable that takes the value 1 if the outcome `Y` is missing. `Z` is a post-treatment confounding variable that informs both the outcome missingness `Delta` and the outcome `Y` itself.  
 
 The target parameter is the conditional odds ratio:
-OR(w): = {P(Y=1|A=1,W=w)/P(Y=0|A=1,W=w)} / {P(Y=1|A=0,W=w)/P(Y=0|A=0,W=w)},
-which we aim to model or approximate by a parametric function of w.
+`OR(w): = {P(Y=1|A=1,W=w)/P(Y=0|A=1,W=w)} / {P(Y=1|A=0,W=w)/P(Y=0|A=0,W=w)}`,
+which we model on the log scale by a linear function in w.
 
 
 ## The implemented functions
 
-Two functions for the semiparametric case and two functions for the nonparametric case are provided in this package. "spOR" and "npOR" will be of primary interest to most users. The former (spOR) assumes a parametric model for the conditional odds ratio, while the latter (npOR) does not assume anything about the functional form of the conditional odds ratio but uses a parametric working model as an approximation. Thus, npOR allows for robust and correct inference even when the true conditional odds ratio is very complex, while still allowing for interpretable estimates based on a user-specified parametric working model. On the other hand, spOR will give incorrect, and possibly misleading, inference when the parametric model is incorrect (does not contain the true OR function).
-
-### Semiparametric partially linear logistic regression with informative outcome missingness
-
-We assume the partially-linear logistic-link model
-logit(P(Y=1|A=a,W=w)) = a*b^T f(w) + h(w)
-where b^T f(w) is a correct parametric model for the log conditional odds ratio logOR(w), and h(w), which is necessarily equal to logit(P(Y=1|A=0,W=w)), is left unspecified and estimated with machine-learning (The Highly Adaptive Lasso, R package: hal9001).
-
-"spOR" provides semiparametric estimates and inference for a user-specified parametric functional form of the conditional odds ratio. The estimates and inference are only correct if the parametric form is correctly specified (i.e. captures the true conditional odds ratio). This method is semiparametric since no further assumptions are made on any other feature of the data-generating probability distribution. Notably, the nuisance function P(Y=1|A=0,W), which is variation independent of the conditional odds ratio, is left totally unspecified (nonparametric) and is learned from the data using machine-learning. This function allows for outcome missingness, however for correct inference, the variables that predict both the outcome Y and outcome missingness Delta must come before the treatment A and be included in W. Rigorously, we require the the outcome Y and missingness mechanism Delta are conditionally independent conditional on A, W.
-
-"spORMissing" is a more general semiparametric version of "spOR" that should be used if there are post-treatment variables Z that inform both the outcome and outcome missingness. For correct inference, this function requires the weaker assumption that  the outcome Y and missingness mechanism Delta are conditionally independent conditional on Z, A, W. Note this function still requires that the parametric form of the odds ratio is correctly specified for correct inference. 
  
-## Machine-learning and Targeted learning of the OddsRatio
-
-Nuisance functions can be estimated using machine-learning (specifically the machine-learning pipeline R package tlverse/sl3), thereby avoiding biases due to model misspecification. To estimate the nuisance functions, for convenience, we allow the user to specify either an sl3 Learner object or a R formula object in which case the nuisance functions are parametrically estimated using glm (not recommended). By default, tlverse/hal9001 is used to estimate all nuisance functions. To allow for valid inference with black-box machine-learning, the initial estimators are debiased with the Targeted Maximum-Likelihood estimation (TMLE) framework, which gives compatible targeted (debiased) substitution estimators that respect the constraints of the statistical model. TMLE is a state-of-the-art method for robust efficient semi/nonparametric inference, and can even perform well at smaller sample sizes (with proper care and tuning).
-
-
+ 
