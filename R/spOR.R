@@ -7,7 +7,6 @@
 #' The partially-linear logistic model assumes that `logit(P(Y=1|A,W)) = b* A f(W) + h(W)` where `h(W) = logit(P(Y=1|A=0,W))` is unspecified (nonparametric) and `f(W)` is specified by a parametric model.
 #' Thus, only a correct parametric model is assumed for the conditional odds ratio, and all other nuisance functions are unspecified (nonparametric).
 #'
-#' NOTE: For more robust nonparametrically correct inference with no parametric assumptions, use the function \link[npOR] instead. In the \link[npOR] function, the user-specified parametric model is instead treated as an approximation rather than the truth.
 #'
 #' @param formula An R formula object describing the functional form of the conditional log odds ratio as a fnction of `W`.
 #' This corresponds with `f(W)` in the partially linear logistic-link model `logit(P(Y=1|A,W)) = b*Af(W) + h(W)`.
